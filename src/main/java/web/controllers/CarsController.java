@@ -21,23 +21,8 @@ public class CarsController {
     }
 
     @GetMapping("/cars")
-    public String printCarInfo(@RequestParam(value = "count", required = false) String count, Model model) {
-        List<Car> cars = null;
-        int carsCount;
-        if (count == null) {
-            cars = dao.getCars();
-        } else {
-            try {
-                carsCount = Integer.parseInt(count);
-                if (carsCount > 0 && carsCount < 5) {
-                    cars = dao.getCars().subList(0, carsCount);
-                } else if (carsCount >= 5) {
-                    cars = dao.getCars();
-                }
-            } catch (NumberFormatException e) {
-                // ignored exception
-            }
-        }
+    public String printCarInfo(@RequestParam(value = "count", required = false) Integer count, Model model) {
+        List<Car> cars = (count == null || count >= 5 ) ? dao.getCars() : dao.getCars().subList(0, count);
         model.addAttribute("cars", cars);
         return "cars";
     }
